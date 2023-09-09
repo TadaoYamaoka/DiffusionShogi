@@ -1,0 +1,33 @@
+# lightning.pytorch==2.0.5
+seed_everything: 0
+trainer:
+  max_steps: 100000
+  val_check_interval: 1000
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        save_top_k: 3
+        monitor: 'val_loss'
+model:
+  dlshogi_model: F:\model\model-pre44_resnet30x384_relu_b4096lr004-013
+  dlshogi_network: resnet30x384_relu
+data:
+  train_cache: F:\hcpe3\a.cache
+  val_hcpe: F:\hcpe3\floodgate.hcpe
+  batch_size: 64
+  num_workers: 4
+  val_batch_size: 128
+optimizer:
+  class_path: torch.optim.AdamW
+  init_args:
+    lr: 1e-4
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1e-08
+    weight_decay: 1e-2
+lr_scheduler:
+  class_path: torch.optim.lr_scheduler.StepLR
+  init_args:
+    step_size: 1
+    gamma: 0.5
