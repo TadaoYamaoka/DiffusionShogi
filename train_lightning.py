@@ -197,8 +197,8 @@ class DiffusionPolicy(pl.LightningModule):
             # 2. compute previous image: x_t -> x_t-1
             image = noise_scheduler.step(model_output, t, image).prev_sample
 
-        pred = image.reshape(bsz, -1)
-        loss = F.nll_loss(torch.log(pred), policies)
+        pred = torch.clamp(image.reshape(bsz, -1), 1e-45, 1)
+        loss = F.cross_entropy(torch.log(pred), policies)
         self.log_dict({"val_loss": loss, "val_acc": accuracy(pred, policies)})
 
     def on_save_checkpoint(self, checkpoint):
