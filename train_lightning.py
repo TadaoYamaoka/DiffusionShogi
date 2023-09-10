@@ -199,7 +199,7 @@ class DiffusionPolicy(pl.LightningModule):
 
         pred = torch.clamp(image.reshape(bsz, -1), 1e-45, 1)
         loss = F.cross_entropy(torch.log(pred), policies)
-        self.log_dict({"val_loss": loss, "val_acc": accuracy(pred, policies)})
+        self.log_dict({"val_loss": loss, "val_acc": accuracy(pred, policies)}, sync_dist=True)
 
     def on_save_checkpoint(self, checkpoint):
         # dlshogi_modelは保存しない
